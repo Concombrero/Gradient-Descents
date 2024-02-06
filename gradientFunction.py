@@ -20,4 +20,3 @@ def gradientFunction(function, evaluationPoint, step):
         rate=(function(newPoint)-function(evaluationPoint))/step
         gradient.append(rate)
     return np.array(gradient)
-
