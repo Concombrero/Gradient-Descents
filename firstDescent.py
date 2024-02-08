@@ -11,14 +11,14 @@ def firstDescent(function, evaluationPoint, stepDerivative, stepDescent, termina
         terminationCondition (float): Value of the maximum gradient norm to stop the descent
 
     Returns:
-        list[array]: List of evaluation points through which the descent has passed
+        list[tupple(array,array)]: List of evaluation points through which the descent has passed and their assiociate gradient
     """
     path=[]
-    path.append(evaluationPoint.copy())
     gradient=gradientFunction(function, evaluationPoint, stepDerivative)
+    path.append((evaluationPoint.copy(),gradient))
     while np.linalg.norm(gradient) >= terminationCondition:
         evaluationPoint-=stepDescent*gradient
-        path.append(evaluationPoint.copy())
         gradient=gradientFunction(function, evaluationPoint, stepDerivative)
+        path.append((evaluationPoint.copy(),gradient))
     return path
 

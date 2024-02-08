@@ -2,21 +2,21 @@ from math import*
 import numpy as np
 
 
-def gradientFunction(function, evaluationPoint, step):
+def gradientFunction(function, evaluationPoint, stepDerivative):
     """Calculate the gradient of a function at a given point
 
     Args:
         function (function): function whose gradient is calculated
-        evaluationPoint (list): Coordinates of the evaluation point
-        step (float): _description_
+        evaluationPoint (array): coordinates of the evaluation point
+        stepDerivative (float): size of the dx in the derivative approximation
     
     Returns:
-        list: gradient of the function at the given point
+        array: gradient of the function at the given point
     """
     gradient=[]
     for i in range(len(evaluationPoint)):
         newPoint = np.copy(evaluationPoint)
-        newPoint[i] += step
-        rate=(function(newPoint)-function(evaluationPoint))/step
-        gradient.append(rate)
+        newPoint[i] += stepDerivative
+        partialDerivative=(function(newPoint)-function(evaluationPoint))/stepDerivative
+        gradient.append(partialDerivative)
     return np.array(gradient)
