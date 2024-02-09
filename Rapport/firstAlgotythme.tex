@@ -1,0 +1,293 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amssymb}
+\def\nbR{\ensuremath{\mathrm{I\! R}}}
+
+\documentclass[10pt]{extarticle}
+
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,mathrsfs}
+\usepackage{xparse}
+\usepackage[inline,shortlabels]{enumitem}
+\setlist{topsep=2pt,itemsep=2pt,parsep=0pt,partopsep=0pt}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper,top=0.5in,bottom=0.2in,left=0.5in,right=0.5in,footskip=0.3in,includefoot]{geometry}
+\usepackage[most]{tcolorbox}
+\tcbuselibrary{minted} % tcolorbox minted library, required to use the "minted" tcb listing engine (this library is not loaded by the option [most])
+\usepackage{minted} % Allows input of raw code, such as Python code
+\usepackage[colorlinks]{hyperref} % ALWAYS load this package LAST
+
+% Custom tcolorbox style for Python code (not the code or the box it appears in, just the options for the box)
+\tcbset{
+    pythoncodebox/.style={
+        enhanced jigsaw,breakable,
+        colback=gray!10,colframe=gray!20!black,
+        boxrule=1pt,top=2pt,bottom=2pt,left=2pt,right=2pt,
+        sharp corners,before skip=10pt,after skip=10pt,
+        attach boxed title to top left,
+        boxed title style={empty,
+            top=0pt,bottom=0pt,left=2pt,right=2pt,
+            interior code={\fill[fill=tcbcolframe] (frame.south west)
+                --([yshift=-4pt]frame.north west)
+                to[out=90,in=180] ([xshift=4pt]frame.north west)
+                --([xshift=-8pt]frame.north east)
+                to[out=0,in=180] ([xshift=16pt]frame.south east)
+                --cycle;
+            }
+        },
+        title={#1}, % Argument of pythoncodebox specifies the title
+        fonttitle=\sffamily\bfseries
+    },
+    pythoncodebox/.default={}, % Default is No title
+    %%% Starred version has no frame %%%
+    pythoncodebox*/.style={
+        enhanced jigsaw,breakable,
+        colback=gray!10,coltitle=gray!20!black,colbacktitle=tcbcolback,
+        frame hidden,
+        top=2pt,bottom=2pt,left=2pt,right=2pt,
+        sharp corners,before skip=10pt,after skip=10pt,
+        attach boxed title to top text left={yshift=-1mm},
+        boxed title style={empty,
+            top=0pt,bottom=0pt,left=2pt,right=2pt,
+            interior code={\fill[fill=tcbcolback] (interior.south west)
+                --([yshift=-4pt]interior.north west)
+                to[out=90,in=180] ([xshift=4pt]interior.north west)
+                --([xshift=-8pt]interior.north east)
+                to[out=0,in=180] ([xshift=16pt]interior.south east)
+                --cycle;
+            }
+        },
+        title={#1}, % Argument of pythoncodebox specifies the title
+        fonttitle=\sffamily\bfseries
+    },
+    pythoncodebox*/.default={}, % Default is No title
+}
+
+% Custom tcolorbox for Python code (not the code itself, just the box it appears in)
+\newtcolorbox{pythonbox}[1][]{pythoncodebox=#1}
+\newtcolorbox{pythonbox*}[1][]{pythoncodebox*=#1} % Starred version has no frame
+
+% Custom minted environment for Python code, NOT using tcolorbox
+\newminted{python}{autogobble,breaklines,mathescape}
+
+% Custom tcblisting environment for Python code, using the "minted" tcb listing engine
+% Adapted from https://tex.stackexchange.com/a/402096
+\NewTCBListing{python}{ !O{} !D(){} !G{} }{
+    listing engine=minted,
+    listing only,
+    pythoncodebox={#1}, % First argument specifies the title (if any)
+    minted language=python,
+    minted options/.expanded={
+        autogobble,breaklines,mathescape,
+        #2 % Second argument, delimited by (), denotes options for the minted environment
+    },
+    #3 % Third argument, delimited by {}, denotes options for the tcolorbox
+}
+
+%%% Starred version has no frame %%%
+\NewTCBListing{python*}{ !O{} !D(){} !G{} }{
+    listing engine=minted,
+    listing only,
+    pythoncodebox*={#1}, % First argument specifies the title (if any)
+    minted language=python,
+    minted options/.expanded={
+        autogobble,breaklines,mathescape,
+        #2 % Second argument, delimited by (), denotes options for the minted environment
+    },
+    #3 % Third argument, delimited by {}, denotes options for the tcolorbox
+}
+
+% verbbox environment, for showing verbatim text next to code output (for package documentation and user learning purposes)
+\NewTCBListing{verbbox}{ !O{} }{
+    listing engine=minted,
+    minted language=latex,
+    boxrule=1pt,sidebyside,skin=bicolor,
+    colback=gray!10,colbacklower=white,valign=center,
+    top=2pt,bottom=2pt,left=2pt,right=2pt,
+    #1
+} % Last argument allows more tcolorbox options to be added
+
+\setlength{\parindent}{0.2in}
+\setlength{\parskip}{0pt}
+\setlength{\columnseprule}{0pt}
+
+\makeatletter
+% Redefining the title block
+\renewcommand\maketitle{
+    \null\vspace{4mm}
+    \begin{center}
+        {\Huge\sffamily\bfseries\selectfont\@title}\\
+            \vspace{4mm}
+        {\Large\sffamily\selectfont\@author}\\
+            \vspace{4mm}
+        {\large\sffamily\selectfont\@date}
+    \end{center}
+    \vspace{6mm}
+}
+% Adapted from https://tex.stackexchange.com/questions/483953/how-to-add-new-macros-like-author-without-editing-latex-ltx?noredirect=1&lq=1
+\makeatother
+
+\title{Rapport Projet 1ere Descente de Gradient}
+
+\begin{document}
+
+\maketitle
+
+\section{Le calcul du gradient}
+
+Pour l'algorithme de descente de gradient il est est necessaire de calculer pour chaque itération de calculer le gradient de la fonction étudiée à un point donné. Ainsi il nous à été necessaire de créer une fonction permettant de calculer celui-ci. 
+
+\subsection{Dérivation sur $\mathbb{R}$}
+La définition de la limite étant:
+$$$f'(x)=\lim\limits_{h \to 0} \frac{f(x+h)-f(x)}{h}$$$
+
+Pour dériver une fonction numériquement on on utilise le taux d'accroissement en utilisant un h suffisament petit.
+$$$f'(x) \simeq \frac{f(x+h)-f(x)}{h}$$$
+
+On nomme alors ce $h$ dans notre code \textit{stepDerivative}.
+
+\begin{python}[Derivée]
+def function(x):
+    """fonction carré
+    """
+    return x**2
+
+
+x=2.0 #initialisation de x à 2
+stepDerivative=0.01 #initialisation de pas assez petit
+derivative=(function(x+stepDervative)-function(x))/stepDerivative #Calcul de la dérivée de la fonction carré au point 2.
+
+print("f'(2)=",derivative)
+\end{python}
+
+A l'éxécution de ce code on obtient:
+
+\begin{pythonbox}
+\texttt{f'(2)=4}
+\end{pythonbox}
+
+Ainsi pour calculer une dérivée selon une direction on utilisera toujours cette technique d'approximation du taux d'accroissement.
+
+\newpage
+\subsection{Les dérivées partielles sur $\mathbb{R}^n$}
+Ainsi pour généraliser cette notion de dérivée sur $\mathbb{R}^n$ on peut considérer le taux d'accroissement selon une direction.
+\\
+Ainsi pour calculer le taux d'accroissement selon la $i$ème variable on crée un point qui correspond au point d'évaluation nommé $evalutionPoint$ ajouté de \textit{stepDerivative} à la $i$ème variable. On note alors ce nouveau point $newPoint$
+
+On peut alors calculer la $i$ème dérivée partielle avec le taux d'accroisement entre $newPoint$ et $evalutionPoint$
+
+\begin{python}[Calcul de dérivée partielle]
+newPoint = np.copy(evaluationPoint)
+newPoint[i] += stepDerivative
+partialDerivative=(function(newPoint)-function(evaluationPoint))/stepDerivative
+\end{python}
+\paragraph{Remarque}
+Le $np.copy()$ permet de s'assurer que en modifiant $newPoint$ on apporte aucune modification à $evaluationPoint$
+
+\subsection{Etablir le gradient}
+Le gradient d'une fonction sur $\mathbb{R}^n$ au point a se présente comme un vecteur de $n$ composantes ou la $i$ème est la dérivée partielle selon la $i$ème variable en ce point.
+\\
+Ainsi pour établir le gradien il suffit de créer un array des dérivées partielle et pour cela on itère le calcul de dérivée partielle à l'aide d'une boucle selon $i$. Et on ajoute chaque dérivée partielle au array gradient.
+
+\begin{python}[]
+def gradientFunction(function, evaluationPoint, stepDerivative):
+    """Calculate the gradient of a function at a given point
+
+    Args:
+        function (function): function whose gradient is calculated
+        evaluationPoint (array): Coordinates of the evaluation point
+        stepDerivative (float): size of the dx in the derivative approximation
+    
+    Returns:
+        array: gradient of the function at the given point
+    """
+    gradient=[]
+    for i in range(len(evaluationPoint)): #Pour chaque itération
+        newPoint = np.copy(evaluationPoint)
+        newPoint[i] += stepDerivative
+        partialDerivative=(function(newPoint)-function(evaluationPoint))/stepDerivative
+        gradient.append(partialDerivative)
+    return np.array(gradient)
+\end{python}
+
+\newpage
+\section{Premier algorithme}
+
+\subsection{Explication de l'algorithme}
+
+\subsection{Code pour un pas fixe}
+Pour pouvoir par la suite étudier l'effet des variations des différents paramêtres sur l'efficacité de la descente de gradient on crée une fonction très générale ou chaque paramêtre peut être décidé à l'appel de la fonction.
+
+\begin{python}[]
+def firstDescent(function, evaluationPoint, stepDerivative, stepDescent, terminationCondition):
+    """Perform gradient descent on the specified function
+
+    Args:
+        function (function): function from which we want to descend
+        evaluationPoint (array): Initial Assessment Point
+        stepDerivative (float): Deviation used to derive
+        stepDescent (float): Steps of the descent
+        terminationCondition (float): Value of the maximum gradient norm to stop the descent
+
+    Returns:
+        list[tupple(array,array)]: List of evaluation points through which the descent has passed and their assiociate gradient
+    """
+    path=[]
+    gradient=gradientFunction(function, evaluationPoint, stepDerivative)
+    path.append((evaluationPoint.copy(),gradient))
+    while np.linalg.norm(gradient) >= terminationCondition:
+        evaluationPoint-=stepDescent*gradient
+        gradient=gradientFunction(function, evaluationPoint, stepDerivative)
+        path.append((evaluationPoint.copy(),gradient))
+    return path
+\end{python}
+
+\paragraph{Remarque}
+On fait en sorte que cette fonction renvoit la liste des points par lesquels la descente passe ainsi que l'évalution du gradient de la fonction à ce point.
+
+\subsection{Code avec pas variant}
+Dans la suite du projet nous allons nous intéresser à la problématique du choix du pas de descente $stepDescent$. Ainsi il est nécessaire de choisir de créer un programme ou il est possible de faire varier ce pas pendant la descente.
+\\
+\\
+Pour cela la fonction ne pendra pas en argument un $float$ pour le $stepDescent$ mais ça sera une $function$ dépendant de $k$ le nombre de répétition.
+\\
+\\
+Par exemple la fonction suivante représente le choix de pas où
+$$$\alpha_{k+1}=\frac{\alpha_{k}}{2} $ et $ \alpha_0=\alpha$$$$
+
+\begin{python}
+
+\end{python}
+
+\newpage
+Ainsi pour adapter le programme de la descente il est necessaire de carter un conmpteur d'itération des étapes de la descente. On note alors ce compteur $counterIteration$
+
+\begin{python}[]
+def descentVarientStep(function, evaluationPoint, stepDerivative, stepDescent, terminationCondition):
+    """Perform gradient descent on the specified function, calculating the new stepDescent at each iteration
+
+    Args:
+        function (function): function from which we want to descend
+        evaluationPoint (array): Initial Assessment Point
+        stepDerivative (float): Deviation used to derive
+        stepDescent (float): Steps of the descent
+        terminationCondition (float): Value of the maximum gradient norm to stop the descent
+        
+    Returns:
+        list[tupple(array,array)]: List of evaluation points through which the descent has passed and their assiociate gradient
+    """
+    path=[]
+    counterIteration=0
+    gradient=gradientFunction(function, evaluationPoint, stepDerivative)
+    path.append(evaluationPoint.copy(),gradient)
+    while np.linalg.norm(gradient) >= terminationCondition:
+        evaluationPoint-=stepDescent(counterIteration)*gradient
+        gradient=gradientFunction(function, evaluationPoint, stepDerivative)
+        path.append((evaluationPoint.copy(),gradient))
+        counterIteration+=1
+    return path
+\end{python}
+
+\end{document}
