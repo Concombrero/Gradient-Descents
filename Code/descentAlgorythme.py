@@ -1,6 +1,6 @@
 from gradientFunction import*
 
-def firstDescent(function, evaluationPoint, stepDerivative, stepDescent, terminationCondition):
+def firstDescent(function: function, evaluationPoint: np.array, stepDerivative:float, stepDescent:float, terminationCondition:float)->list[tuple[np.array, np.array]]:
     """Perform gradient descent on the specified function
 
     Args:
@@ -15,14 +15,14 @@ def firstDescent(function, evaluationPoint, stepDerivative, stepDescent, termina
     """
     path=[]
     gradient=gradientFunction(function, evaluationPoint, stepDerivative)
-    path.append((evaluationPoint.copy(),gradient))
+    path.append((evaluationPoint.copy(), gradient))
     while np.linalg.norm(gradient) >= terminationCondition:
         evaluationPoint-=stepDescent*gradient
         gradient=gradientFunction(function, evaluationPoint, stepDerivative)
-        path.append((evaluationPoint.copy(),gradient))
+        path.append((evaluationPoint.copy(), gradient))
     return path
 
-def descentVarientStep(function, evaluationPoint, stepDerivative, stepDescent, terminationCondition):
+def descentVarientStep(function:function, evaluationPoint:np.array, stepDerivative: float, stepDescent:function, terminationCondition:float)->list[tuple[np.array, np.array]]:
     """Perform gradient descent on the specified function, calculating the new stepDescent at each iteration
 
     Args:

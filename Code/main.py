@@ -1,9 +1,10 @@
-from firstDescent import*
-from momentumDescent import*
+from gradientFunction import*
+from descentAlgorythme import*
 
-def f(X):
-    return X[0]**2+X[1]**2
+def f1(X):
+    return X[0]**2
 
-i=np.array([16.0,16.0])
+def f2(X):
+    return X[0]+X[1]**2
 
-print(momentumGradientDescent(f,i,0.1,0.1,1))
+print(firstDescent(f1, np.array([16.0]), 0.1, 0.1, 1))
