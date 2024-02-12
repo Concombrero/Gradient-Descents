@@ -4,7 +4,7 @@ def firstDescent(function: function, evaluationPoint: np.array, stepDerivative:f
     """Perform gradient descent on the specified function
 
     Args:
-        function (function): function from which we want to descend
+        function (function): function from which we want to descend. The function must take an array in parameter even if it's à function with one variable
         evaluationPoint (array): Initial Assessment Point
         stepDerivative (float): Deviation used to derive
         stepDescent (float): Steps of the descent
@@ -26,7 +26,7 @@ def descentVarientStep(function:function, evaluationPoint:np.array, stepDerivati
     """Perform gradient descent on the specified function, calculating the new stepDescent at each iteration
 
     Args:
-        function (function): function from which we want to descend
+        function (function): function from which we want to descend. The function must take an array in parameter even if it's à function with one variable.
         evaluationPoint (array): Initial Assessment Point
         stepDerivative (float): Deviation used to derive
         stepDescent (float): Steps of the descent
