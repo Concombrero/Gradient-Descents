@@ -1,6 +1,6 @@
 from gradientFunction import*
 
-def backtracking(evaluationPoint : np.Array,gradient : np.array, stepDescent : float, function : function):
+def backtracking(evaluationPoint : np.Array,gradient : np.array, stepDescent : float, function : callable):
     """basic backtracking line search in the direction of the gradient
 
     Args:
@@ -16,7 +16,7 @@ def backtracking(evaluationPoint : np.Array,gradient : np.array, stepDescent : f
         stepDescent = stepDescent/2
     return stepDescent
 
-def backtrackingDescent(function: function, evaluationPoint: np.array, stepDerivative:float, stepDescent:float, terminationCondition:float)->list[tuple[np.array, np.array]]:
+def backtrackingDescent(function: callable, evaluationPoint: np.array, stepDerivative:float, stepDescent:float, terminationCondition:float)->list[tuple[np.array, np.array]]:
     """Perform gradient descent on the specified function
 
     Args:

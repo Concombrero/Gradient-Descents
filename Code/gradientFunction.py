@@ -3,7 +3,7 @@ from math import*
 import numpy as np
 
 
-def gradientFunction(function: function, evaluationPoint: np.array , stepDerivative: float)->np.array:
+def gradientFunction(function: callable, evaluationPoint: np.array , stepDerivative: float)->np.array:
     """Calculate the gradient of a function at a given point
 
     Args:

@@ -1,6 +1,6 @@
 from gradientFunction import*
 
-def firstDescent(function: function, evaluationPoint: np.array, stepDerivative:float, stepDescent:float, terminationCondition:float)->list[tuple[np.array, np.array]]:
+def firstDescent(function: callable, evaluationPoint: np.array, stepDerivative:float, stepDescent:float, terminationCondition:float)->list[tuple[np.array, np.array]]:
     """Perform gradient descent on the specified function
 
     Args:
@@ -22,7 +22,7 @@ def firstDescent(function: function, evaluationPoint: np.array, stepDerivative:f
         path.append((evaluationPoint.copy(), gradient))
     return path
 
-def descentVarientStep(function:function, evaluationPoint:np.array, stepDerivative: float, stepDescent:function, terminationCondition:float)->list[tuple[np.array, np.array]]:
+def descentVarientStep(function:callable, evaluationPoint:np.array, stepDerivative: float, stepDescent:function, terminationCondition:float)->list[tuple[np.array, np.array]]:
     """Perform gradient descent on the specified function, calculating the new stepDescent at each iteration
 
     Args:
