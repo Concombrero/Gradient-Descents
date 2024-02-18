@@ -17,7 +17,10 @@ def gradientFunction(function: callable, evaluationPoint: np.array , stepDerivat
     gradient=[]
     for i in range(len(evaluationPoint)):
         newPoint = np.copy(evaluationPoint)
-        newPoint[i] += stepDerivative
+        ### JE COMPRENDS RIEN CA VEUT PAS UPDATE LA COORDONNE ???? CA BOUGE JAMAIS
+        ptndecon=newPoint[i] + stepDerivative
+        newPoint[i]= ptndecon
+        print(newPoint[i])
         partialDerivative=(function(newPoint)-function(evaluationPoint))/stepDerivative
         gradient.append(partialDerivative)
     return np.array(gradient)
