@@ -1,0 +1,61 @@
+import numpy as np
+
+class Network:
+    def __init__(self, sizes) -> None:
+        self.nb_layers = len(sizes)
+        self.sizes = sizes
+        self.biases = [np.random.randn(i,1) for i in sizes[1:]]
+        self.weights = [np.random.randn(y,x) for (x,y) in zip(sizes[:-1], sizes[1:])]
+        
+    def feedforward(self, a):
+        c = a
+        for i in range(self.nb_layers):
+            c = sigmoid(np.dot(w, c) + self.biases[i])
+        return c
+    
+    def SGD(self, epochs, train_set, mini_batch_size, learning_rate, test_set = None):
+        
+        if test_set:
+            n_test = len(test_set)
+        n = len(train_set)
+        for i in range(epochs):
+            np.random.shuffle(train_set)
+            mini_batches = [train_set[k:k+mini_batch_size] for k in range(0,n//mini_batch_size,mini_batch_size)]
+            for batch in mini_batches:
+                self.update_mini_batch(batch, learning_rate)
+            if test_set:
+                print("epoch {0} : {1} / {2}".format(i, self.evaluate(test_set), n_test))
+            else:
+                print("epoch {0} complete".format(i))
+
+              
+    def update_mini_batch(self, batch, learning_rate):
+        """fonction qui modifie les poids et les biais grâce à la descente de gradient
+
+        Args:
+            batch (np.array): lot d'exemples
+            learning_rate (int): facteur
+        """
+        nabla_b = [np.zeros(b.shape) for b in self.biases]
+        nabla_w = [np.zeros(w.shape) for w in self.weights]
+        for x,y in batch:
+            delta_nabla_b, delta_nabla_w = self.backprop(x,y)
+            nabla_b = [nb + dnb for nb,dnb in zip(nabla_b,delta_nabla_b)]
+            nabla_w = [nw + dnw for nw,dnw in zip(nabla_w,delta_nabla_w)]
+        self.biases = [b - nb*(learning_rate/len(batch)) for b, nb in zip(self.biases, nabla_b)]
+        self.weights = [w - nw*(learning_rate/len(batch)) for w, nw in zip(self.weights, nabla_w)]
+        
+    
+    def evaluate(self, test_set):
+        
+        note = 0
+        for x in test_set:
+            y_pred = self.feedforward(x[0])
+            if y_pred == x[1]:
+                note += 1
+        return note
+            
+        
+    
+def sigmoid(z):
+    return 1.0/(1.0 + np.exp(-z))
