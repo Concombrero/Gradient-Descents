@@ -47,7 +47,7 @@ def descentVarientStep(function:function, evaluationPoint:np.array, stepDerivati
         counterIteration+=1
     return path
 
-def heavyBallDescent(function:function, evaluationPoint:np.array, stepDerivative:float, stepDescent:float, terminaisonCondition:float, stepMomentum: float)->list[tuple[np.array, np.array]]:
+def heavyBallDescent(function:function, evaluationPoint:np.array, stepDerivative:float, stepDescent:float, terminaisonCondition:float, stepMomentum: float =0.9)->list[tuple[np.array, np.array]]:
     """Perform the heavy ball gradient descent on the specified function
 
     Args:
@@ -100,4 +100,3 @@ def nesterovDescent(function: function, evaluationPoint: np.array, stepDerivativ
         
         path.append(evaluationPoint)
     return path[1::]
-
