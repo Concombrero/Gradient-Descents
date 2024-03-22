@@ -2,7 +2,7 @@ from __future__ import annotations
 import matplotlib.pyplot as plt
 import numpy as np
 import random as rd
-from descentAlgorythme import*
+from Code.descentAlgorithme import*
 
 def createPoint(dimension: int, a:np.array, b:np.array)->np.array:
     point=[]
@@ -27,15 +27,14 @@ def convergenceGraph(dimension: int, function: function, methods: list[function]
     plt.show()
 
 
-def numberStepGraph(dimension: int, function: function, methods: list[function], nameMethode: list[str], precissons:list[float])->None:
-    initialPoint=createPoint(dimension, 10, 15)
-    precissions=[10., 1., 0.1, 0.01, 0.001]
+def numberStepGraph(dimension: int, function: function, methods: list[function], nameMethode: list[str], a:np.array, b:np.array, conditions:list[float])->None:
+    initialPoint=createPoint(dimension, a, b)
     for method in methods:
         Y=[]
-        for precission in precissions:
-            path=method(function, initialPoint.copy(), 0.01, 0.1, precission)
+        for condition in conditions:
+            path=method(function, initialPoint.copy(), 0.01, 0.1, condition)
             Y.append(len(path))
-        plt.plot(precissions, Y)
+        plt.plot(condition, Y)
     plt.legend([nameMethode[i] for i in range(len(nameMethode))])
     plt.semilogx()
     plt.title('Iteration in function of the value of the terminaison condition')
