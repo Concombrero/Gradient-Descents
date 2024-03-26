@@ -100,3 +100,89 @@ def nesterovDescent(function: function, evaluationPoint: np.array, stepDerivativ
         
         path.append(evaluationPoint)
     return path[1::]
+
+def adamDescent(function, evaluationPoint, stepDerivative, stepDescent, terminationCondition, learning_rate=0.001, beta1=0.9, beta2=0.999, epsilon=1e-8):
+    """Perform gradient descent using Adam optimizer on the specified function
+
+    Args:
+        function (function): function from which we want to descend. The function must take an array in parameter even if it's a function with one variable.
+        evaluationPoint (array): Initial assessment point.
+        stepDerivative (float): Deviation used to derive.
+        stepDescent (float): Steps of the descent.
+        terminationCondition (float): Value of the maximum gradient norm to stop the descent.
+        learning_rate (float): Learning rate for the optimizer.
+        beta1 (float): Exponential decay rate for the first moment estimates.
+        beta2 (float): Exponential decay rate for the second moment estimates.
+        epsilon (float): Small value to prevent division by zero.
+
+    Returns:
+        list[tuple(array,array)]: List of evaluation points through which the descent has passed and their associated gradient.
+    """
+    path=[]
+    m = np.zeros_like(evaluationPoint)
+    v = np.zeros_like(evaluationPoint)
+    beta1_t = 1.0
+    beta2_t = 1.0
+    path.append((evaluationPoint.copy(), gradientFunction(function, evaluationPoint, stepDerivative)))
+    while np.linalg.norm(gradientFunction(function, evaluationPoint, stepDerivative)) >= terminationCondition:
+        g = gradientFunction(function, evaluationPoint, stepDerivative)
+        m = beta1 * m + (1 - beta1) * g
+        v = beta2 * v + (1 - beta2) * g**2
+        m_hat = m / (1 - beta1_t)
+        v_hat = v / (1 - beta2_t)
+        evaluationPoint -= stepDescent * learning_rate * m_hat / (np.sqrt(v_hat) + epsilon)
+        beta1_t *= beta1
+        beta2_t *= beta2
+        path.append((evaluationPoint.copy(), gradientFunction(function, evaluationPoint, stepDerivative)))
+    return path
+
+def rmspropDescent(function, evaluationPoint, stepDerivative, stepDescent, terminationCondition, learning_rate=0.001, beta=0.9, epsilon=1e-8):
+    """Perform gradient descent using RMSprop optimizer on the specified function
+
+    Args:
+        function (function): function from which we want to descend. The function must take an array in parameter even if it's a function with one variable.
+        evaluationPoint (array): Initial assessment point.
+        stepDerivative (float): Deviation used to derive.
+        stepDescent (float): Steps of the descent.
+        terminationCondition (float): Value of the maximum gradient norm to stop the descent.
+        learning_rate (float): Learning rate for the optimizer.
+        beta (float): Exponential decay rate for the estimation of squared gradients.
+        epsilon (float): Small value to prevent division by zero.
+
+    Returns:
+        list[tuple(array,array)]: List of evaluation points through which the descent has passed and their associated gradient.
+    """
+    path=[]
+    v = np.zeros_like(evaluationPoint)
+    path.append((evaluationPoint.copy(), gradientFunction(function, evaluationPoint, stepDerivative)))
+    while np.linalg.norm(gradientFunction(function, evaluationPoint, stepDerivative)) >= terminationCondition:
+        g = gradientFunction(function, evaluationPoint, stepDerivative)
+        v = beta * v + (1 - beta) * g**2
+        evaluationPoint -= stepDescent * learning_rate * g / (np.sqrt(v) + epsilon)
+        path.append((evaluationPoint.copy(), gradientFunction(function, evaluationPoint, stepDerivative)))
+    return path
+
+def adagradDescent(function, evaluationPoint, stepDerivative, stepDescent, terminationCondition, learning_rate=0.001, epsilon=1e-8):
+    """Perform gradient descent using Adagrad optimizer on the specified function
+
+    Args:
+        function (function): function from which we want to descend. The function must take an array in parameter even if it's a function with one variable.
+        evaluationPoint (array): Initial assessment point.
+        stepDerivative (float): Deviation used to derive.
+        stepDescent (float): Steps of the descent.
+        terminationCondition (float): Value of the maximum gradient norm to stop the descent.
+        learning_rate (float): Learning rate for the optimizer.
+        epsilon (float): Small value to prevent division by zero.
+
+    Returns:
+        list[tuple(array,array)]: List of evaluation points through which the descent has passed and their associated gradient.
+    """
+    path = []
+    v = np.zeros_like(evaluationPoint)
+    path.append((evaluationPoint.copy(), gradientFunction(function, evaluationPoint, stepDerivative)))
+    while np.linalg.norm(gradientFunction(function, evaluationPoint, stepDerivative)) >= terminationCondition:
+        g = gradientFunction(function, evaluationPoint, stepDerivative)
+        v += g**2
+        evaluationPoint -= stepDescent * learning_rate * g / (np.sqrt(v) + epsilon)
+        path.append((evaluationPoint.copy(), gradientFunction(function, evaluationPoint, stepDerivative)))
+    return path
